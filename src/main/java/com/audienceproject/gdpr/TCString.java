@@ -4,6 +4,7 @@ import com.audienceproject.gdpr.struct.CoreString;
 import com.audienceproject.gdpr.struct.PublisherTc;
 import com.audienceproject.gdpr.struct.VendorSegment;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class TCString {
 
     private TCString(String consentString) {
         String[] segments = consentString.split("\\.");
-        Base64.Decoder decoder = Base64.getDecoder();
+        Base64.Decoder decoder = Base64.getUrlDecoder();
 
         coreString = new CoreString(new UnalignedBitStream(decoder.decode(segments[0])));
 
@@ -24,7 +25,7 @@ public class TCString {
             byte[] bytes = decoder.decode(segments[i]);
             UnalignedBitStream bitStream = new UnalignedBitStream(bytes);
             int segmentType = (int) bitStream.readBitsInt(3);
-            bitStream.seek(0); // Reset stream.
+            bitStream.reset();
             switch (segmentType) {
                 case 1:
                     disclosedVendors = new VendorSegment(bitStream);
@@ -34,6 +35,9 @@ public class TCString {
                     break;
                 case 3:
                     publisherTc = new PublisherTc(bitStream);
+                    break;
+                default:
+                    throw new RuntimeException("Invalid segment type: " + segmentType);
             }
         }
     }
@@ -52,6 +56,22 @@ public class TCString {
 
     public Optional<PublisherTc> getPublisherTC() {
         return Optional.ofNullable(publisherTc);
+    }
+
+    public LocalDateTime createdOn() {
+        return TCStringUtils.decodeTime(coreString.created());
+    }
+
+    public LocalDateTime lastUpdatedOn() {
+        return TCStringUtils.decodeTime(coreString.lastUpdated());
+    }
+
+    public String getConsentLanguage() {
+        return TCStringUtils.decodeLetterCode(coreString.consentLanguage());
+    }
+
+    public String getPublisherCountryCode() {
+        return TCStringUtils.decodeLetterCode(coreString.specificJurisdictionDisclosures().publisherCc());
     }
 
     public static TCString parse(String consentString) {

@@ -53,7 +53,8 @@ public class CoreString extends KaitaiStruct {
         this.cmpId = this._io.readBitsInt(12);
         this.cmpVersion = this._io.readBitsInt(12);
         this.consentScreen = this._io.readBitsInt(6);
-        this.consentLanguage = this._io.readBitsInt(12);
+        this._io.alignToByte();
+        this.consentLanguage = new LetterCode(this._io, this, _root);
         this.vendorListVersion = this._io.readBitsInt(12);
         this.tcfPolicyVersion = this._io.readBitsInt(6);
         this.isServiceSpecific = this._io.readBitsInt(1) != 0;
@@ -72,6 +73,38 @@ public class CoreString extends KaitaiStruct {
         this.vendorConsent = new VendorSection(this._io, this, _root);
         this.vendorLegitimateInterest = new VendorSection(this._io, this, _root);
         this.publisherRestrictions = new PublisherRestrictionsSection(this._io, this, _root);
+    }
+    public static class LetterCode extends KaitaiStruct {
+        public static LetterCode fromFile(String fileName) throws IOException {
+            return new LetterCode(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LetterCode(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LetterCode(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LetterCode(KaitaiStream _io, KaitaiStruct _parent, CoreString _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.first = this._io.readBitsInt(6);
+            this.second = this._io.readBitsInt(6);
+        }
+        private long first;
+        private long second;
+        private CoreString _root;
+        private KaitaiStruct _parent;
+        public long first() { return first; }
+        public long second() { return second; }
+        public CoreString _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class VendorSection extends KaitaiStruct {
         public static VendorSection fromFile(String fileName) throws IOException {
@@ -177,9 +210,11 @@ public class CoreString extends KaitaiStruct {
         private void _read() {
             this.numPubRestrictions = this._io.readBitsInt(12);
             this._io.alignToByte();
-            pubRestrictionEntries = new ArrayList<PubRestrictionEntry>((int) (numPubRestrictions()));
-            for (int i = 0; i < numPubRestrictions(); i++) {
-                this.pubRestrictionEntries.add(new PubRestrictionEntry(this._io, this, _root));
+            if (numPubRestrictions() > 0) {
+                pubRestrictionEntries = new ArrayList<PubRestrictionEntry>((int) (numPubRestrictions()));
+                for (int i = 0; i < numPubRestrictions(); i++) {
+                    this.pubRestrictionEntries.add(new PubRestrictionEntry(this._io, this, _root));
+                }
             }
         }
         public static class PubRestrictionEntry extends KaitaiStruct {
@@ -248,14 +283,15 @@ public class CoreString extends KaitaiStruct {
         }
         private void _read() {
             this.purposeOneTreatment = this._io.readBitsInt(1) != 0;
-            this.publisherCc = this._io.readBitsInt(12);
+            this._io.alignToByte();
+            this.publisherCc = new LetterCode(this._io, this, _root);
         }
         private boolean purposeOneTreatment;
-        private long publisherCc;
+        private LetterCode publisherCc;
         private CoreString _root;
         private CoreString _parent;
         public boolean purposeOneTreatment() { return purposeOneTreatment; }
-        public long publisherCc() { return publisherCc; }
+        public LetterCode publisherCc() { return publisherCc; }
         public CoreString _root() { return _root; }
         public CoreString _parent() { return _parent; }
     }
@@ -302,7 +338,7 @@ public class CoreString extends KaitaiStruct {
     private long cmpId;
     private long cmpVersion;
     private long consentScreen;
-    private long consentLanguage;
+    private LetterCode consentLanguage;
     private long vendorListVersion;
     private long tcfPolicyVersion;
     private boolean isServiceSpecific;
@@ -322,7 +358,7 @@ public class CoreString extends KaitaiStruct {
     public long cmpId() { return cmpId; }
     public long cmpVersion() { return cmpVersion; }
     public long consentScreen() { return consentScreen; }
-    public long consentLanguage() { return consentLanguage; }
+    public LetterCode consentLanguage() { return consentLanguage; }
     public long vendorListVersion() { return vendorListVersion; }
     public long tcfPolicyVersion() { return tcfPolicyVersion; }
     public boolean isServiceSpecific() { return isServiceSpecific; }

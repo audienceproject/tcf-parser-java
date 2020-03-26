@@ -15,7 +15,7 @@ seq:
   - id: consent_screen
     type: b6
   - id: consent_language
-    type: b12
+    type: letter_code
   - id: vendor_list_version
     type: b12
   - id: tcf_policy_version
@@ -43,12 +43,18 @@ seq:
   - id: publisher_restrictions
     type: publisher_restrictions_section
 types:
+  letter_code:
+    seq:
+      - id: first
+        type: b6
+      - id: second
+        type: b6
   specific_jurisdiction_disclosures:
     seq:
       - id: purpose_one_treatment
         type: b1
       - id: publisher_cc
-        type: b12
+        type: letter_code
   vendor_section:
     seq:
       - id: max_vendor_id
@@ -71,6 +77,7 @@ types:
         type: pub_restriction_entry
         repeat: expr
         repeat-expr: num_pub_restrictions
+        if: num_pub_restrictions > 0
     types:
       pub_restriction_entry:
         seq:

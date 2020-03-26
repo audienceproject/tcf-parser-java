@@ -12,4 +12,9 @@ class UnalignedBitStream extends ByteBufferKaitaiStream {
     public void alignToByte() {
         // Do nothing.
     }
+
+    public void reset() {
+        super.alignToByte();
+        super.seek(0);
+    }
 }
