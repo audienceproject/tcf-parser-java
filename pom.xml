@@ -4,9 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>tcf-parser-java</name>
+    <description>Java implementation of the Transparency and Consent Framework 2.0</description>
+    <url>https://github.com/audienceproject/tcf-parser-java</url>
+
     <groupId>com.audienceproject</groupId>
     <artifactId>tcf-parser-java</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
+
     <build>
         <plugins>
             <plugin>
@@ -16,6 +21,45 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>nexus</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -33,5 +77,36 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Staging Repository</name>
+            <url>https://oss.sonatype.org/nexus/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/mit</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>git@github.com:audienceproject/tcf-parser-java.git</url>
+        <connection>scm:git:git//github.com/audienceproject/tcf-parser-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com:audienceproject/tcf-parser-java.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>jacobfi</id>
+            <name>Jacob Fischer</name>
+            <email>jacob.fischer@audienceproject.com</email>
+            <organization>AudienceProject</organization>
+            <organizationUrl>https://www.audienceproject.com</organizationUrl>
+        </developer>
+    </developers>
 
 </project>
