@@ -15,6 +15,12 @@ public class TCStringTest {
     private final String consentStringAllOptions = "COwaAUcOwaAUcGKAAAENAcCMAP_AAAAAAAAAF0EWSQgAYWwho0QUBzBAIYAfJgSCAMgSAAQIoCkFQICERBAEKiAQHAEQJAAAGBAAkACBAQAoHCBMCQABgAARiRCEQECIDRNABIBAggAKYQFAAARmikHC3ZCY702yOmQAAAAA.IF0EWSQgAYWwho0QUBzBAIYAfJgSCAMgSAAQIoCkFQICERBAEKiAQHAEQJAAAGBAAkACAAQAoHCBMCQABgAARiRCEQECIDRNABIBAggAKYQFAAARmikHC3ZCY702yOmQ.YAAAAAAAAAAAAAAAAAA";
 
     @Test
+    void getVersion() {
+        assertEquals(2, TCString.getVersion(consentStringNoOptions));
+        assertEquals(2, TCString.getVersion(consentStringAllOptions));
+    }
+
+    @Test
     void parseCoreString() {
         TCString tcString = TCString.parse(consentStringNoOptions);
         CoreString coreString = tcString.getCoreString();

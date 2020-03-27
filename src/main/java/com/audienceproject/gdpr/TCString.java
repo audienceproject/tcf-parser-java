@@ -78,4 +78,11 @@ public class TCString {
         return new TCString(consentString);
     }
 
+    public static int getVersion(String consentString) {
+        String coreSegment = consentString.substring(0, consentString.indexOf('.'));
+        byte[] bytes = Base64.getUrlDecoder().decode(coreSegment);
+        long version = new UnalignedBitStream(bytes).readBitsInt(6);
+        return (int) version;
+    }
+
 }
