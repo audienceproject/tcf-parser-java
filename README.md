@@ -15,7 +15,9 @@ import com.audienceproject.gdpr.TCString;
 
 String consentString = "COwaAK3OwaAK3GKAAAENAcCAAAAAAAAAAAAAAAAAAAAA.IF0EWSQgAYWwho0QUBzBAIYAfJgSCAMgSAAQIoCkFQICERBAEKiAQHAEQJAAAGBAAkACAAQAoHCBMCQABgAARiRCEQECIDRNABIBAggAKYQFAAARmikHC3ZCY702yOmQ.YAAAAAAAAAAAAAAAAAA";
 
-TCString tcString = TCString.parse(consentString);
+if (TCString.getVersion(consentString) == 2) {
+    TCString tcString = TCString.parse(consentString);
+}
 ```
 
 # Making Changes
