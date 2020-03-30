@@ -5,6 +5,7 @@ import com.audienceproject.gdpr.struct.CoreString;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 public class TCStringUtils {
 
@@ -16,6 +17,10 @@ public class TCStringUtils {
         char a = (char) (letterCode.first() + 97);
         char b = (char) (letterCode.second() + 97);
         return String.valueOf(a) + b;
+    }
+
+    public static TCPurposes decodePurposes(List<Boolean> values) {
+        return new TCPurposes(values);
     }
 
 }

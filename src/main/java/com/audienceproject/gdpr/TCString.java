@@ -71,18 +71,23 @@ public class TCString {
     }
 
     public String getPublisherCountryCode() {
-        return TCStringUtils.decodeLetterCode(coreString.specificJurisdictionDisclosures().publisherCc());
+        return TCStringUtils.decodeLetterCode(coreString.coreStringV2().specificJurisdictionDisclosures().publisherCc());
+    }
+
+    public TCPurposes getV1PurposesAllowed() {
+        return TCStringUtils.decodePurposes(coreString.coreStringV1().purposesAllowed());
+    }
+
+    public TCPurposes getV2PurposesConsent() {
+        return TCStringUtils.decodePurposes(coreString.coreStringV2().purposesConsent());
+    }
+
+    public TCPurposes getV2PurposesLegitimateInterest() {
+        return TCStringUtils.decodePurposes(coreString.coreStringV2().purposesLiTransparency());
     }
 
     public static TCString parse(String consentString) {
         return new TCString(consentString);
-    }
-
-    public static int getVersion(String consentString) {
-        String coreSegment = consentString.substring(0, consentString.indexOf('.'));
-        byte[] bytes = Base64.getUrlDecoder().decode(coreSegment);
-        long version = new UnalignedBitStream(bytes).readBitsInt(6);
-        return (int) version;
     }
 
 }
