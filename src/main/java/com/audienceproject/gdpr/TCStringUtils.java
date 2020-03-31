@@ -27,7 +27,7 @@ public class TCStringUtils {
         if (vendorSection.isRangeEncoding())
             return isVendorPresentInRange(vendorSection.rangeSection(), vendorId);
         else
-            return vendorSection.bitField().get(vendorId - 1);
+            return vendorId <= vendorSection.maxVendorId() && vendorSection.bitField().get(vendorId - 1);
     }
 
     public static boolean isVendorPresentInRange(CoreString.CoreStringV2.RangeSection rangeSection, int vendorId) {

@@ -113,4 +113,13 @@ public class TCStringTest {
         assertAll(publisherTc.pubPurposesLiTransparency().stream().map(li -> () -> assertFalse(li)));
     }
 
+    @Test
+    void parseVendorConsent() {
+        TCString noOptions = TCString.parse(consentStringNoOptions);
+        assertFalse(noOptions.vendorHasConsent(394));
+
+        TCString allOptions = TCString.parse(consentStringAllOptions);
+        assertTrue(allOptions.vendorHasConsent(394));
+    }
+
 }
