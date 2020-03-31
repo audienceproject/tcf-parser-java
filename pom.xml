@@ -10,7 +10,7 @@
 
     <groupId>com.audienceproject</groupId>
     <artifactId>tcf-parser-java</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 
     <build>
         <plugins>

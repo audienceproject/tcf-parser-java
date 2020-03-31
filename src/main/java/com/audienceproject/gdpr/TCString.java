@@ -6,7 +6,9 @@ import com.audienceproject.gdpr.struct.VendorSegment;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TCString {
 
@@ -84,6 +86,23 @@ public class TCString {
 
     public TCPurposes getV2PurposesLegitimateInterest() {
         return TCStringUtils.decodePurposes(coreString.coreStringV2().purposesLiTransparency());
+    }
+
+    public boolean vendorHasConsent(int vendorId) {
+        return TCStringUtils.isVendorPresentInSection(coreString.coreStringV2().vendorConsent(), vendorId);
+    }
+
+    public boolean vendorHasLegitimateInterest(int vendorId) {
+        return TCStringUtils.isVendorPresentInSection(coreString.coreStringV2().vendorLegitimateInterest(), vendorId);
+    }
+
+    public Map<Integer, CoreString.CoreStringV2.PublisherRestrictionsSection.RestrictionType> getV2PublisherRestrictionsForVendor(int vendorId) {
+        return coreString.coreStringV2().publisherRestrictions().pubRestrictionEntries().stream()
+                .filter(entry -> TCStringUtils.isVendorPresentInRange(entry.rangeSection(), vendorId))
+                .collect(Collectors.toMap(
+                        entry -> (int) entry.purposeId(),
+                        entry -> entry.restrictionType())
+                );
     }
 
     public static TCString parse(String consentString) {

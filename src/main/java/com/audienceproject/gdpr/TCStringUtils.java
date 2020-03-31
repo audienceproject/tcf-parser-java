@@ -23,4 +23,20 @@ public class TCStringUtils {
         return new TCPurposes(values);
     }
 
+    public static boolean isVendorPresentInSection(CoreString.CoreStringV2.VendorSection vendorSection, int vendorId) {
+        if (vendorSection.isRangeEncoding())
+            return isVendorPresentInRange(vendorSection.rangeSection(), vendorId);
+        else
+            return vendorSection.bitField().get(vendorId - 1);
+    }
+
+    public static boolean isVendorPresentInRange(CoreString.CoreStringV2.RangeSection rangeSection, int vendorId) {
+        return rangeSection.rangeEntries().stream().anyMatch(entry -> {
+            if (entry.isARange())
+                return vendorId >= entry.startOrOnlyVendorId() && vendorId <= entry.endVendorId();
+            else
+                return vendorId == entry.startOrOnlyVendorId();
+        });
+    }
+
 }
